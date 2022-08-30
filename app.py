@@ -14,7 +14,7 @@ import app_logger
 app_logger.logger_initializer(
     app_name = __name__, 
     logger_name = environ.get('LOGGER_NAME'), 
-    logging_format = '[%(asctime)s] [%(levelname)s] [%(remote_addr)s] requested [%(url)s %(method)s] [%(filename)s:%(lineno)d] in %(module)s" %(message)s with params: %(params)s and body: %(body)s',
+    logging_format = '[%(asctime)s] [%(levelname)s] [%(remote_addr)s] requested [%(url)s %(method)s] [%(filename)s:%(lineno)d] [PARAMS] %(params)s [BODY] %(body)s [MESSAGE] %(message)s ',
     logging_level = environ.get('LOGGER_LEVEL')
 )
 
@@ -35,6 +35,7 @@ app.config['MONGODB_SETTINGS'] = [
     }
 ]
 initialize_database(app)
+logger.info("Here")
 
 # ---------< Run Application >---------
 if __name__ == '__main__':
