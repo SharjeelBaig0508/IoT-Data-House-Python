@@ -1,7 +1,8 @@
-from flask import request, g
+import os
+import jwt
+
 from functools import wraps
-from jwt import decode, ExpiredSignatureError, InvalidTokenError
-from os import environ
+from flask import request, g
 
 def authenticate_user(function) -> tuple:
     @wraps(function)
@@ -20,12 +21,12 @@ def authenticate_user(function) -> tuple:
         token = splitted_token[-1]
         
         try:
-            g.claims = decode(token, environ.get('SECRET_KEY', 'anything_goes_with_123@'))
+            g.claims = jwt.decode(token, os.environ.get('SECRET_KEY', 'anything_goes_with_123@'))
             
-        except ExpiredSignatureError:
+        except jwt.ExpiredSignatureError:
             return {'message': 'Authorization Token is Expired'}, 498
         
-        except InvalidTokenError:
+        except jwt.InvalidTokenError:
             return {'message': 'Authorization Token is Invalid'}, 498
         
         return function(

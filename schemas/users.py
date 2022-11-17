@@ -1,5 +1,10 @@
 # -------------< Imports >-------------
-from marshmallow import Schema, fields, validates_schema, ValidationError
+from marshmallow import (
+    Schema, 
+    fields, 
+    ValidationError,
+    validates_schema, 
+)
 from decorators.schema_handler import validation_error_handler
 
 # -------------< Schemas >-------------

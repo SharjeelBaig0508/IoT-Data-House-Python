@@ -1,20 +1,20 @@
 # -------------------------------------< Environment Variables >-------------------------------------
-from os import environ
+import os
 import dotenv
 if dotenv.find_dotenv():
     dotenv.load_dotenv()
 
 # -------------------------------------< Logging Implementation >------------------------------------
 import app_logger
-from logging import Logger
+import logging
 app_logger.logger_initializer(
     app_name = __name__, 
-    logger_name = environ.get('LOGGER_NAME'), 
+    logger_name = os.environ.get('LOGGER_NAME'), 
     logging_format = '[%(asctime)s] [%(levelname)s] [%(remote_addr)s] [%(url)s %(method)s] [%(filename)s:%(lineno)d] [PARAMS] %(params)s [BODY] %(body)s [MESSAGE] %(message)s',
-    logging_level = environ.get('LOGGER_LEVEL')
+    logging_level = os.environ.get('LOGGER_LEVEL')
 )
 
-rootLogger: Logger = app_logger.multi_loggers.get(environ.get('LOGGER_NAME'))
+rootLogger: logging.Logger = app_logger.multi_loggers.get(os.environ.get('LOGGER_NAME'))
 if rootLogger:
     logger = rootLogger.getChild(__name__)
 
@@ -26,7 +26,7 @@ from database_layer import initialize_database
 
 # -----------------------------------< Flask App Initialization >------------------------------------ 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = environ.get('SECRET_KEY', 'anything_goes_with_123@')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'anything_goes_with_123@')
 
 # ----------------------------------< Cross Origin Implementation >----------------------------------
 CORS(app)
@@ -34,7 +34,7 @@ CORS(app)
 # ----------------------------------< MongoEngine Initialization >-----------------------------------
 app.config['MONGODB_SETTINGS'] = [
     {
-        'host': environ.get('DATABASE_URL')
+        'host': os.environ.get('DATABASE_URL')
     }
 ]
 initialize_database(app)

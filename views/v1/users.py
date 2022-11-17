@@ -4,10 +4,8 @@ from decorators.authenication import authenticate_user
 from decorators.request_validations import find_request_by_user
 
 from controllers.users import (
-    user_login, 
-    user_signup, 
-    user_fetch, 
-    user_update, 
+    user_login, user_signup, 
+    user_fetch, user_update, 
     user_delete
 )
 

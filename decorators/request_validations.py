@@ -1,5 +1,5 @@
-from functools import wraps
 from flask import request
+from functools import wraps
 
 def find_request_by_user(function) -> tuple:
     @wraps(function)

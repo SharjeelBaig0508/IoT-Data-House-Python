@@ -1,19 +1,17 @@
-from schemas.users import user_login_validator, user_signup_validator, user_update_validator
 from models.users import User, Status
-from utils.users import generate_jwt, user_filter
+from schemas.users import user_login_validator, user_signup_validator, user_update_validator
+from utils.users import generate_jwt, get_single_user, get_active_user, get_active_users, user_filter
 
 def user_login(body: dict) -> tuple:
     err, verified_data = user_login_validator(body)
     if err:
         return err, 400
     
-    given_user = User(**verified_data)
-    
-    db_user = User.objects(email=verified_data['email'], status=Status.ACTIVE).first()
+    db_user: User = get_active_user({'email': verified_data['email']})
     if not db_user:
         return {'message': 'User not found'}, 404
     
-    if not db_user.check_password(given_user.password):
+    if not db_user.check_password(verified_data['password']):
         return {'message': 'Invalid Password'}, 401
     
     err, token = generate_jwt(user_id=str(db_user.id))
@@ -27,7 +25,7 @@ def user_signup(body: dict) -> tuple:
     if err:
         return err, 400
     
-    if User.objects(email=verified_data['email'], status=Status.ACTIVE).first():
+    if get_active_user({'email': verified_data['email']}):
         return {'message': 'User Email already exists'}, 409
     
     user_model = User(**verified_data)
@@ -37,14 +35,14 @@ def user_signup(body: dict) -> tuple:
     return {'message': 'User created successfully'}, 201
 
 def user_fetch(user_id: str) -> tuple:
-    db_user = User.objects(id=user_id, status=Status.ACTIVE).first()
+    db_user: User = get_active_user({'id': user_id})
     if not db_user:
         return {'message': 'User not found'}, 404
     
     return {'user': user_filter(db_user)}, 200
 
 def user_update(user_id: str, body: dict) -> tuple:
-    db_user = User.objects(id=user_id, status=Status.ACTIVE).first()
+    db_user: User = get_active_user({'id': user_id})
     if not db_user:
         return {'message': 'User not found'}, 404
         
@@ -79,7 +77,7 @@ def user_update(user_id: str, body: dict) -> tuple:
     }, 200
 
 def user_delete(user_id: str) -> tuple:
-    db_user = User.objects(id=user_id).first()
+    db_user: User = get_single_user({'id': user_id})
     if not db_user:
         return {'message': 'User not found'}, 404
     
