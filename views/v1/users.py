@@ -4,8 +4,8 @@ from decorators.authenication import authenticate_user
 from decorators.request_validations import find_request_by_user
 
 from controllers.users import (
-    user_login, user_signup, 
-    user_fetch, user_update, 
+    user_login, user_signup,
+    user_fetch, user_update,
     user_delete
 )
 
@@ -22,7 +22,7 @@ def get_user(user_id: str) -> tuple:
 
 def update_user(user_id: str, request_by_user: dict={}) -> tuple:
     return user_update(
-        user_id=user_id, 
+        user_id=user_id,
         body=request_by_user
     )
 
@@ -36,13 +36,13 @@ def self_operations(claims: dict, request_by_user: dict) -> tuple:
         return get_user(
                     user_id=claims.get('sub'),
                 )
-    
+
     if request.method == 'PUT':
         return update_user(
                     user_id=claims.get('sub'),
                     request_by_user=request_by_user,
                 )
-    
+
     if request.method == 'DELETE':
         return delete_user(
                     user_id=claims.get('sub'),

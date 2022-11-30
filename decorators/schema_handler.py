@@ -11,5 +11,5 @@ def validation_error_handler(function) -> tuple:
                     'errors': err.messages,
                     'message': 'Some fields are invalid'
                     }, {}
-    
+
     return wrapper

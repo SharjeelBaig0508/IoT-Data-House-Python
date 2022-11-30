@@ -15,11 +15,11 @@ def generate_jwt(user_id: str) -> tuple:
             'iat': datetime.utcnow(),
             'exp': datetime.utcnow() + timedelta(hours=int(os.environ.get('LOGIN_EXP', '1')))
         }
-        
-        return {}, {'token': 
+
+        return {}, {'token':
                         jwt.encode(
-                            claims, 
-                            os.environ.get('SECRET_KEY', 'anything_goes_with_123@'), 
+                            claims,
+                            os.environ.get('SECRET_KEY', 'anything_goes_with_123@'),
                             algorithm='HS256'
                         ).decode()
                     }
@@ -50,5 +50,5 @@ def multi_user_filter(users: QuerySet) -> list:
     user_list = []
     for user in users:
         user_list.append(user_filter(user))
-    
+
     return user_list

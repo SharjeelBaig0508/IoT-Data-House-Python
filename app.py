@@ -8,8 +8,8 @@ if dotenv.find_dotenv():
 import app_logger
 import logging
 app_logger.logger_initializer(
-    app_name = __name__, 
-    logger_name = os.environ.get('LOGGER_NAME'), 
+    app_name = __name__,
+    logger_name = os.environ.get('LOGGER_NAME'),
     logging_format = '[%(asctime)s] [%(levelname)s] [%(remote_addr)s] [%(url)s %(method)s] [%(filename)s:%(lineno)d] [PARAMS] %(params)s [BODY] %(body)s [MESSAGE] %(message)s',
     logging_level = os.environ.get('LOGGER_LEVEL')
 )

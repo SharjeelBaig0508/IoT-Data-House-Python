@@ -4,4 +4,3 @@ db = MongoEngine()
 
 def initialize_database(app):
     db.init_app(app)
-    

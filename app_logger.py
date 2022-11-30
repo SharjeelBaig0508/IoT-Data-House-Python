@@ -1,6 +1,6 @@
 # -------------< Library Imports >-----------
-from flask import has_request_context, request
 import logging
+from flask import has_request_context, request
 
 multi_loggers = {}
 
@@ -15,10 +15,19 @@ class RequestFormatter(logging.Formatter):
             record.body = {}
             if request.is_json:
                 record.body = request.get_json()
-                if record.body and type(record.body) is dict:
-                    shortened_data = {k: record.body[k][:2] + "*****" + record.body[k][-2:] for k in to_hide_fields_from_body if k in record.body and record.body[k] and type(record.body[k]) is str}
+                if record.body and isinstance(record.body, dict):
+                    shortened_data = {
+                        k: record.body[k][:2] + "*****" + record.body[k][-2:]
+                        for k in to_hide_fields_from_body
+                        if k in record.body
+                        and record.body[k]
+                        and isinstance(record.body[k], str)
+                    }
                     if shortened_data:
-                        to_be_shortened_data = {k: record.body[k] for k in record.body}
+                        to_be_shortened_data = {
+                            k: record.body[k]
+                            for k in record.body
+                        }
                         to_be_shortened_data.update(shortened_data)
                         record.body = to_be_shortened_data
         else:
