@@ -16,13 +16,11 @@ def generate_jwt(user_id: str) -> tuple:
             'exp': datetime.utcnow() + timedelta(hours=int(os.environ.get('LOGIN_EXP', '1')))
         }
 
-        return {}, {'token':
-                        jwt.encode(
-                            claims,
-                            os.environ.get('SECRET_KEY', 'anything_goes_with_123@'),
-                            algorithm='HS256'
-                        ).decode()
-                    }
+        return {}, jwt.encode(
+                        claims,
+                        os.environ.get('SECRET_KEY', 'anything_goes_with_123@'),
+                        algorithm='HS256'
+                    ).decode()
     except Exception:
         return {'message': 'Error Occured while generating Authorization Token'}, {}
 
@@ -40,15 +38,15 @@ def get_active_users(user_filter: dict) -> QuerySet:
     user_filter['status'] = Status.ACTIVE
     return get_records(User, user_filter)
 
-user_fields_to_keep = ['name', 'email', 'status']
+def user_filter(user: Document, fields_to_keep: list) -> dict:
+    user: dict = json.loads(user.to_json())
+    return {k: user.get(k) for k in fields_to_keep}
 
-def user_filter(user: Document) -> dict:
-    user = json.loads(user.to_json())
-    return {k: user[k] for k in user_fields_to_keep}
-
-def multi_user_filter(users: QuerySet) -> list:
-    user_list = []
-    for user in users:
-        user_list.append(user_filter(user))
-
-    return user_list
+def multi_user_filter(users: QuerySet, fields_to_keep: list) -> list:
+    return [
+        user_filter(
+            user=user,
+            fields_to_keep=fields_to_keep,
+        )
+        for user in users
+    ]

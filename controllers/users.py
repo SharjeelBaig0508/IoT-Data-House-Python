@@ -18,7 +18,10 @@ def user_login(body: dict) -> tuple:
     if err:
         return err, 500
 
-    return token, 200
+    return {
+        'message': 'User Logged In',
+        'token': token,
+    }, 200
 
 def user_signup(body: dict) -> tuple:
     err, verified_data = user_signup_validator(body)
@@ -39,7 +42,12 @@ def user_fetch(user_id: str) -> tuple:
     if not db_user:
         return {'message': 'User not found'}, 404
 
-    return {'user': user_filter(db_user)}, 200
+    return {
+        'message': 'Successful Response',
+        'user': user_filter(
+            user=db_user,
+            fields_to_keep=['name', 'email', 'status'],
+        )}, 200
 
 def user_update(user_id: str, body: dict) -> tuple:
     db_user: User = get_active_user({'id': user_id})
@@ -73,7 +81,10 @@ def user_update(user_id: str, body: dict) -> tuple:
 
     return {
         'message': message,
-        'user': user_filter(db_user),
+        'user': user_filter(
+            user=db_user,
+            fields_to_keep=['name', 'email', 'status'],
+        ),
     }, 200
 
 def user_delete(user_id: str) -> tuple:
