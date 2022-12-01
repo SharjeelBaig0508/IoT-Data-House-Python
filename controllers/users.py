@@ -19,7 +19,7 @@ def user_login(body: dict) -> tuple:
         return err, 500
 
     return {
-        'message': 'User Logged In',
+        'message': 'User logged in',
         'token': token,
     }, 200
 
@@ -29,7 +29,7 @@ def user_signup(body: dict) -> tuple:
         return err, 400
 
     if get_active_user({'email': verified_data['email']}):
-        return {'message': 'User Email already exists'}, 409
+        return {'message': 'User email already exists'}, 409
 
     user_model = User(**verified_data)
     user_model.encrypt_password()
@@ -43,10 +43,16 @@ def user_fetch(user_id: str) -> tuple:
         return {'message': 'User not found'}, 404
 
     return {
-        'message': 'Successful Response',
+        'message': 'Successful response',
         'user': user_filter(
             user=db_user,
-            fields_to_keep=['name', 'email', 'status'],
+            fields_to_keep=[
+                'name',
+                'email',
+                'status',
+                'createdAt',
+                'updatedAt',
+            ],
         )}, 200
 
 def user_update(user_id: str, body: dict) -> tuple:
@@ -83,7 +89,13 @@ def user_update(user_id: str, body: dict) -> tuple:
         'message': message,
         'user': user_filter(
             user=db_user,
-            fields_to_keep=['name', 'email', 'status'],
+            fields_to_keep=[
+                'name',
+                'email',
+                'status',
+                'createdAt',
+                'updatedAt',
+            ],
         )}, 200
 
 def user_delete(user_id: str) -> tuple:

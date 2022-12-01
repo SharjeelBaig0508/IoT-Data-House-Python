@@ -1,6 +1,5 @@
 import os
 import jwt
-import json
 
 from models.users import User, Status
 from datetime import datetime, timedelta
@@ -39,8 +38,17 @@ def get_active_users(user_filter: dict) -> QuerySet:
     return get_records(User, user_filter)
 
 def user_filter(user: Document, fields_to_keep: list) -> dict:
-    user: dict = json.loads(user.to_json())
-    return {k: user.get(k) for k in fields_to_keep}
+    user: dict = user.to_mongo().to_dict()
+
+    applyFormat = {
+        'createdAt': datetime.isoformat,
+        'updatedAt': datetime.isoformat,
+    }
+
+    for field in applyFormat:
+        user[field] = applyFormat[field](user[field])
+
+    return {field: user.get(field) for field in fields_to_keep}
 
 def multi_user_filter(users: QuerySet, fields_to_keep: list) -> list:
     return [
