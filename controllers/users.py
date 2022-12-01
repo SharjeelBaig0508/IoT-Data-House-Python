@@ -84,8 +84,7 @@ def user_update(user_id: str, body: dict) -> tuple:
         'user': user_filter(
             user=db_user,
             fields_to_keep=['name', 'email', 'status'],
-        ),
-    }, 200
+        )}, 200
 
 def user_delete(user_id: str) -> tuple:
     db_user: User = get_single_user({'id': user_id})
