@@ -14,13 +14,11 @@ all_rules = {
             '/user/login',
             users.login,
             [POST],
-        ],
-        [
+        ], [
             '/user/signup',
             users.signup,
             [POST],
-        ],
-        [
+        ], [
             '/user',
             users.self_operations,
             [GET, PUT, DELETE],
