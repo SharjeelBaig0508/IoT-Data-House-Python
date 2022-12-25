@@ -12,7 +12,7 @@ from mongoengine import (
 class Status(Enum):
     ONLINE = 0
     OFFLINE = 1
-    REMOVED = 2
+    DELETED = 2
 
 class Device(Document):
     name = StringField(
