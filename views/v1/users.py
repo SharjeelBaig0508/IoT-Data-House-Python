@@ -1,6 +1,6 @@
 from flask import request
 
-from decorators.authenication import authenticate_user
+from decorators.authenication import authenticate
 from decorators.request_validations import find_request_by_user
 
 from controllers.users import (
@@ -29,7 +29,7 @@ def update_user(user_id: str, request_by_user: dict={}) -> tuple:
 def delete_user(user_id: str) -> tuple:
     return user_delete(user_id=user_id)
 
-@authenticate_user
+@authenticate(['user'])
 @find_request_by_user
 def self_operations(claims: dict, request_by_user: dict) -> tuple:
     if request.method == 'GET':

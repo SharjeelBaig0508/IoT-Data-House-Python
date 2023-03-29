@@ -11,6 +11,7 @@ def generate_jwt(user_id: str) -> tuple:
     try:
         claims = {
             'sub': user_id,
+            'user_type': 'user',
             'iat': datetime.utcnow(),
             'exp': datetime.utcnow() + timedelta(hours=int(os.environ.get('LOGIN_EXP', '1')))
         }
