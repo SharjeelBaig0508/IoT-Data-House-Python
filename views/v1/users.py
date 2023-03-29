@@ -1,6 +1,6 @@
 from flask import request
 
-from decorators.authenication import authenticate
+from decorators.authentication import authenticate
 from decorators.request_validations import find_request_by_user
 
 from controllers.users import (
